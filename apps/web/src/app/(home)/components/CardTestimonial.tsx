@@ -14,7 +14,6 @@ const CardTestimonial: React.FC<TestimonialProps> = ({
   image,
   testi,
 }) => {
-  
   const ratingIcon = Array.from({ length: rating }, () => ({
     icon: IoStar,
   }));
@@ -24,7 +23,7 @@ const CardTestimonial: React.FC<TestimonialProps> = ({
       key={name}
       className="min-w-[250px] max-w-xs flex-shrink-0 rounded-lg border bg-white p-4 transition-all duration-300 hover:border hover:border-secondary hover:shadow-md"
     >
-      <p className="text-xs text-gray-600">{testi}</p>
+      <p className="text-xs text-gray-900">{testi}</p>
       <div className="mt-4 flex gap-x-2">
         <Image
           src={image}
@@ -37,7 +36,7 @@ const CardTestimonial: React.FC<TestimonialProps> = ({
           <h3 className="font-medium">{name}</h3>
           <div className="flex">
             {ratingIcon.map((rating) => (
-              <rating.icon size={15} />
+              <rating.icon size={15} className="text-yellow-400" />
             ))}
           </div>
         </div>
