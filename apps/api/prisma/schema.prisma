@@ -10,12 +10,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id         Int       @id @default(autoincrement())
+  firstname  String?
+  lastname   String?
+  email      String    @unique
+  password   String?
+  isVerified Boolean   @default(false)
+  otp        String?
+  otpExpired DateTime?
+  provider   Provider  @default(CREDENTIAL)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  @@map("samples") // if you want to use snake_case format
+  Account     Account[]
+  Transaction Transaction[]
+  Budget      Budget[]
+}
+
+enum Provider {
+  CREDENTIAL
+  GOOGLE
+  X
+}
+
+model Account {
+  id      String      @id @default(cuid())
+  name    String?
+  type    TypeAccount @default(Savings)
+  balance Float
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  Transaction Transaction[]
+}
+
+enum TypeAccount {
+  Savings
+  CreditCard
+  Cash
+}
+
+model Transaction {
+  id          String           @id @default(cuid())
+  type        TypeTransactions @default(Pengeluaran)
+  amount      Float
+  description String?          @db.LongText
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id])
+}
+
+enum TypeTransactions {
+  Pengeluaran
+  Penghasilan
+  Transfer
+}
+
+model Budget {
+  id        Int       @id @default(autoincrement())
+  name      String
+  amount    Float
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
