@@ -1,5 +1,6 @@
 import { LoginValues, RegisterValues } from "@/types/formAuth";
 import { axiosInstance } from "../axios";
+import { getCookie } from "../server";
 
 export const registerFetch = async (payload: RegisterValues) => {
   const res = await axiosInstance.post(
@@ -17,7 +18,22 @@ export const registerFetch = async (payload: RegisterValues) => {
   return res;
 };
 
-export const verifyOtpFetch = async () => {};
+export const verifyOtpFetch = async (payload: RegisterValues) => {
+  const token = await getCookie("otp");
+  const res = await axiosInstance.post(
+    "/verify-otp",
+    {
+      otp: payload.otp,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token?.value}`,
+      },
+    },
+  );
+
+  return res;
+};
 
 export const updateDataFetch = async () => {};
 
@@ -37,4 +53,4 @@ export const loginFetch = async (payload: LoginValues) => {
   return res;
 };
 
-export const forgotPasswordFetch = async () => {}
+export const forgotPasswordFetch = async () => {};

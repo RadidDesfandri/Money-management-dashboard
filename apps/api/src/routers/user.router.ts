@@ -1,4 +1,5 @@
 import { UserController } from '@/controllers/user.controller';
+import { checkTokenMiddleware } from '@/middleware/auth.middleware';
 import { Router } from 'express';
 
 export class UserRouter {
@@ -12,7 +13,12 @@ export class UserRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/register', this.userController.RegisterController);
+    this.router.post('/register', this.userController.RegisterController);
+    this.router.post(
+      '/verify-otp',
+      checkTokenMiddleware,
+      this.userController.VerifyOtpController,
+    );
   }
 
   getRouter(): Router {

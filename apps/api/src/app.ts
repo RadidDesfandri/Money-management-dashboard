@@ -41,7 +41,7 @@ export default class App {
       (err: Error, req: Request, res: Response, next: NextFunction) => {
         if (req.path.includes('/api/')) {
           console.error('Error : ', err.stack);
-          res.status(500).send('Error !');
+          res.status(500).send(err.message);
         } else {
           next();
         }
@@ -56,7 +56,7 @@ export default class App {
       res.send(`Hello, Enjoy The Coding!!!`);
     });
 
-    this.app.use('/api/user', userRouter.getRouter());
+    this.app.use('/api', userRouter.getRouter());
   }
 
   public start(): void {
