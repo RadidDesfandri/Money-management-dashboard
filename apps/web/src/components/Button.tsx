@@ -32,7 +32,7 @@ const Button: React.FC<ButtonProps> = ({
         `flex justify-center px-3 py-1 text-hitam md:px-6 md:py-2`,
         fullWidth && "w-full",
         roundedFull ? "rounded-full" : "rounded-lg",
-        disabled && "cursor-default text-gray-700 opacity-50",
+        disabled && "cursor-default hover:bg-secondary text-gray-700 opacity-50",
         secondary &&
           "hover:bg-secondaryhover bg-secondary transition-all duration-300",
         danger &&

@@ -18,7 +18,7 @@ export const registerFetch = async (payload: RegisterValues) => {
   return res;
 };
 
-export const verifyOtpFetch = async (payload: RegisterValues) => {
+export const verifyOtpFetch = async (payload: { otp: string }) => {
   const token = await getCookie("otp");
   const res = await axiosInstance.post(
     "/verify-otp",
@@ -32,6 +32,20 @@ export const verifyOtpFetch = async (payload: RegisterValues) => {
     },
   );
 
+  return res;
+};
+
+export const resendOtpFetch = async () => {
+  const token = await getCookie("otp");
+  const res = await axiosInstance.post(
+    "/resend-otp",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token?.value}`,
+      },
+    },
+  );
   return res;
 };
 

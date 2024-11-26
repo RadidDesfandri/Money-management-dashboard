@@ -19,6 +19,11 @@ export class UserRouter {
       checkTokenMiddleware,
       this.userController.VerifyOtpController,
     );
+    this.router.post(
+      '/resend-otp',
+      checkTokenMiddleware,
+      this.userController.ResendOtpController,
+    );
   }
 
   getRouter(): Router {

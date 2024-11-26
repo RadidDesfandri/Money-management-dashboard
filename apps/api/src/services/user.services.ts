@@ -16,7 +16,7 @@ export const registerService = async (email: string) => {
 
     const { otp, token } = generateOtp(email);
     const otpExpired = new Date();
-    otpExpired.setMinutes(otpExpired.getMinutes() + 5);
+    otpExpired.setMinutes(otpExpired.getMinutes() + 2);
 
     const newUser = await prisma.user.create({
       data: {
@@ -27,8 +27,6 @@ export const registerService = async (email: string) => {
     });
 
     const templatePath = path.join(__dirname, '../templates', 'otp.hbs');
-    console.log('Template path:', templatePath);
-
     const dataSendMail = {
       otp: newUser.otp,
       email: newUser.email,
@@ -62,10 +60,10 @@ export const verivyOtpService = async (
 
     if (!user) throw new Error('User not found');
 
-    if (otp !== otpToken) throw new Error('Invalid otp code');
-
     if (user.otpExpired && new Date() > user.otpExpired)
       throw new Error('Otp code has expired');
+
+    if (otp !== otpToken) throw new Error('Invalid otp code');
 
     const verifyUser = await prisma.user.update({
       where: { email },
@@ -77,6 +75,47 @@ export const verivyOtpService = async (
     });
 
     return verifyUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resendOtpService = async (email: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) throw new Error('User not found');
+    const { otp, token } = generateOtp(email);
+    const otpExpired = new Date();
+    otpExpired.setMinutes(otpExpired.getMinutes() + 2);
+
+    const newOtp = await prisma.user.update({
+      where: { email },
+      data: {
+        otp,
+        otpExpired,
+      },
+    });
+
+    const templatePath = path.join(__dirname, '../templates', 'otp.hbs');
+    const dataSendMail = {
+      otp: newOtp.otp,
+      email: newOtp.email,
+    };
+
+    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const compiledTemplate = handlebars.compile(templateSource);
+    const html = compiledTemplate(dataSendMail);
+
+    await transporter.sendMail({
+      to: email,
+      subject: 'Verification email',
+      html,
+    });
+
+    return { newOtp, token };
   } catch (error) {
     throw error;
   }

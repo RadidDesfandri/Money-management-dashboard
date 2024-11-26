@@ -2,6 +2,7 @@
 
 import { ErrorMessage, Field } from "formik";
 import clsx from "clsx";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 interface InputProps {
   type: string;
@@ -31,26 +32,38 @@ const Input: React.FC<InputProps> = ({
   return (
     <div>
       {label && (
-        <label htmlFor={name} className="mb-1 block text-sm">
+        <label htmlFor={id} className="mb-1 block text-sm">
           {label}
         </label>
       )}
-      <Field
-        id={id}
-        type={type}
-        name={name}
-        disabled={disabled}
-        autoComplete="email"
-        placeholder={placeholder}
-        className={clsx(
-          `mb-1 w-full rounded-lg bg-transparent px-4 py-3 text-sm outline-none ring-1 ring-inset ring-secondaryhover ring-offset-secondaryhover transition-all duration-300 placeholder:text-sm placeholder:text-gray-500 hover:ring-secondary hover:placeholder:text-gray-400 focus:ring-offset-2 disabled:hover:ring-secondaryhover disabled:hover:placeholder:text-gray-500`,
-          disabled && "opacity-55",
-          error &&
-            "ring-rose-500 ring-offset-rose-500 hover:ring-rose-500 hover:placeholder:text-gray-500",
+      <div className="relative">
+        <Field
+          id={id}
+          type={type}
+          name={name}
+          disabled={disabled}
+          autoComplete="email"
+          placeholder={placeholder}
+          className={clsx(
+            `mb-1 w-full rounded-lg bg-transparent px-4 py-3 text-sm outline-none ring-1 ring-inset transition-all duration-300 placeholder:text-sm focus:ring-offset-2 disabled:hover:ring-secondaryhover disabled:hover:placeholder:text-gray-500`,
+            disabled && "opacity-55",
+            error
+              ? "ring-rose-500 ring-offset-rose-500"
+              : "ring-secondaryhover ring-offset-secondaryhover placeholder:text-gray-500 hover:ring-secondary hover:placeholder:text-gray-400",
+          )}
+        >
+          {children}
+        </Field>
+        {setShowPassword && (
+          <button
+            onClick={() => setShowPassword!(!showPassword)}
+            type="button"
+            className="absolute right-3 top-[30%]"
+          >
+            {showPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
+          </button>
         )}
-      >
-        {children}
-      </Field>
+      </div>
       {error && (
         <ErrorMessage
           name={name}

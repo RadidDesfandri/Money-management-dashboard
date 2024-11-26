@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikHelpers } from "formik";
-import Modal from "@/components/Modal";
+import Modal from "@/components/Modals/Modal";
 import Input from "@/components/Input/Input";
 import { useCallback, useState } from "react";
 import {
@@ -18,6 +18,10 @@ import {
   registerFetch,
 } from "@/libs/fetch/auth";
 import { AxiosError } from "axios";
+import { createCookie } from "@/libs/server";
+import toast from "react-hot-toast";
+import ModalOtp from "@/components/Modals/ModalOtp";
+import OtpForm from "./OtpForm";
 
 interface ModalAuthProps {
   isOpen: boolean;
@@ -29,6 +33,8 @@ type VariantAuth = "LOGIN" | "REGISTER" | "FORGOTPASSWORD";
 const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
   const [isVariant, setIsVariant] = useState<VariantAuth>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [openOtp, setOpenOtp] = useState(false);
 
   const handleChangeVariant = useCallback(() => {
     if (isVariant == "LOGIN") {
@@ -47,12 +53,12 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
     if (isVariant == "LOGIN") {
       try {
         const res = await loginFetch(data);
-        console.log(res);
-        alert("succes");
+        createCookie("token", res.data.token);
+        toast.success(res.data.msg);
         action.resetForm();
       } catch (error) {
         if (error instanceof AxiosError) {
-          alert(error.response?.data);
+          toast.error(error.response?.data);
         }
       } finally {
         setIsLoading(false);
@@ -62,13 +68,14 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
     if (isVariant == "REGISTER") {
       try {
         const res = await registerFetch(data);
-        alert("succes");
+        createCookie("otp", res.data.token);
+        toast.success(res.data.msg);
+        setOpenOtp(true);
         action.resetForm();
       } catch (error) {
         if (error instanceof AxiosError) {
-          alert(error.response?.data);
+          toast.error(error.response?.data);
         }
-        console.log(error);
       } finally {
         setIsLoading(false);
       }
@@ -80,7 +87,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
         action.resetForm();
       } catch (error) {
         if (error instanceof AxiosError) {
-          alert(error.response?.data);
+          toast.error(error.response?.data);
         }
         console.log(error);
       } finally {
@@ -103,7 +110,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
         {({ errors, touched }) => {
           return (
             <Form className="text-slate-100">
-              <div className="my-4 px-3">
+              <div className="my-3 px-3">
                 <h1 className="text-lg font-medium md:text-xl">
                   {isVariant == "LOGIN"
                     ? "Selamat Datang Kembali!"
@@ -111,7 +118,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
                       ? "Bergabung dengan kami hari ini!"
                       : "Lupa Password?"}
                 </h1>
-                <p className="mt-1 w-80 text-[11px] text-gray-300 md:text-xs">
+                <p className="mt-1 w-80 text-[11px] text-gray-300">
                   {isVariant == "LOGIN"
                     ? "Masukkan detail kamu di bawah ini untuk masuk ke akun kamu"
                     : isVariant == "REGISTER"
@@ -119,7 +126,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
                       : "Tidak bisa masuk? Atur ulang password kamu di sini."}
                 </p>
 
-                <div className="my-6 flex flex-col space-y-4">
+                <div className="my-4 flex flex-col space-y-4">
                   <Input
                     id="email"
                     name="email"
@@ -134,8 +141,12 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
                       <Input
                         id="password"
                         name="password"
-                        type="password"
+                        type={isShowPassword ? "text" : "password"}
                         label="Password"
+                        showPassword={isShowPassword}
+                        setShowPassword={() =>
+                          setIsShowPassword(!isShowPassword)
+                        }
                         disabled={isLoading}
                         error={
                           !!(errors as any)?.password &&
@@ -165,7 +176,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
                   </Button>
                 </div>
 
-                <div className="relative mb-5">
+                <div className="relative mb-4">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-300" />
                   </div>
@@ -187,7 +198,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
 
-                <p className="mt-5 text-center text-[11px] text-gray-300">
+                <p className="mt-4 text-center text-[11px] text-gray-300">
                   {isVariant == "LOGIN"
                     ? "Belum Memiliki Account?"
                     : "Sudah Memiliki Account?"}{" "}
@@ -205,6 +216,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
           );
         }}
       </Formik>
+      <OtpForm onClose={() => setOpenOtp(false)} isOpen={openOtp} />
     </Modal>
   );
 };

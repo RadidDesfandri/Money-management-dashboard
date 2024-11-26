@@ -5,5 +5,4 @@ export interface LoginValues {
 
 export interface RegisterValues {
   email: string;
-  otp?: string
 }
