@@ -4,6 +4,7 @@ import prisma from '@/prisma';
 import path from 'path';
 import fs from 'fs';
 import { transporter } from '@/helpers/nodemailer';
+import { hashPassword } from '@/helpers/hashPassword';
 
 export const registerService = async (email: string) => {
   try {
@@ -116,6 +117,35 @@ export const resendOtpService = async (email: string) => {
     });
 
     return { newOtp, token };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userFormService = async (
+  email: string,
+  firstname: string,
+  lastname: string,
+  password: string,
+) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) throw new Error('User not found');
+    const hashPass = await hashPassword(password);
+
+    const updateUser = await prisma.user.update({
+      where: { email },
+      data: {
+        firstname,
+        lastname,
+        password: hashPass,
+      },
+    });
+
+    return updateUser;
   } catch (error) {
     throw error;
   }

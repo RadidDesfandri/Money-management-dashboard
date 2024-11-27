@@ -14,6 +14,7 @@ interface InputProps {
   disabled?: boolean;
   placeholder?: string;
   showPassword?: boolean;
+  autoComplete?: string;
   setShowPassword?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -26,6 +27,7 @@ const Input: React.FC<InputProps> = ({
   error,
   disabled,
   placeholder,
+  autoComplete,
   showPassword,
   setShowPassword,
 }) => {
@@ -42,7 +44,7 @@ const Input: React.FC<InputProps> = ({
           type={type}
           name={name}
           disabled={disabled}
-          autoComplete="email"
+          autoComplete={autoComplete}
           placeholder={placeholder}
           className={clsx(
             `mb-1 w-full rounded-lg bg-transparent px-4 py-3 text-sm outline-none ring-1 ring-inset transition-all duration-300 placeholder:text-sm focus:ring-offset-2 disabled:hover:ring-secondaryhover disabled:hover:placeholder:text-gray-500`,

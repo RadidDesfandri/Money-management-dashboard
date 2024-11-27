@@ -1,6 +1,7 @@
 import {
   registerService,
   resendOtpService,
+  userFormService,
   verivyOtpService,
 } from '@/services/user.services';
 import { NextFunction, Request, Response } from 'express';
@@ -46,6 +47,28 @@ export class UserController {
         msg: 'Code otp has been send',
         newOtp,
         token,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async UserFormController(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user?.email) throw new Error('Something went wrong!');
+
+      const { firstname, lastname, password } = req.body;
+
+      const userForm = await userFormService(
+        req.user?.email,
+        firstname,
+        lastname,
+        password,
+      );
+
+      return res.status(200).send({
+        msg: 'User data is complete, please log in to continue',
+        userForm,
       });
     } catch (error) {
       next(error);

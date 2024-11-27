@@ -14,6 +14,13 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
+interface FormikHelper {
+  firstname: string;
+  lastname: string;
+  password: string;
+  confirmpassword: string;
+}
+
 const UserForm = () => {
   const { isOpenFormUser } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
@@ -21,12 +28,15 @@ const UserForm = () => {
   const [isPassword, setShowPassword] = useState(false);
   const [isPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-  const onSubmit = async (data: UserType) => {
+  const onSubmit = async (
+    data: UserType,
+    action: FormikHelpers<FormikHelper>,
+  ) => {
     setIsLoading(true);
     try {
       const res = await userFormFetch(data);
       toast.success(res.data.msg);
-      // action.resetForm();
+      action.resetForm();
       dispatch(setIsModalOpenUser(false));
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -43,8 +53,7 @@ const UserForm = () => {
         initialValues={initialValueFormUser}
         validationSchema={userFormSchema}
         onSubmit={(value, action) => {
-          onSubmit(value);
-          alert(JSON.stringify(value));
+          onSubmit(value, action);
         }}
       >
         {({ errors, touched }) => {
@@ -64,6 +73,7 @@ const UserForm = () => {
                     error={!!errors.firstname && touched.firstname}
                     disabled={isLoading}
                     label="Nama depan"
+                    autoComplete="off"
                     placeholder="Masukkan nama depan"
                   />
                   <Input
@@ -72,6 +82,7 @@ const UserForm = () => {
                     disabled={isLoading}
                     error={!!errors.lastname && touched.lastname}
                     label="Nama belakang"
+                    autoComplete="off"
                     placeholder="Masukkan nama belakang"
                   />
                   <Input

@@ -24,6 +24,11 @@ export class UserRouter {
       checkTokenMiddleware,
       this.userController.ResendOtpController,
     );
+    this.router.patch(
+      '/user-form',
+      checkTokenMiddleware,
+      this.userController.UserFormController,
+    );
   }
 
   getRouter(): Router {
