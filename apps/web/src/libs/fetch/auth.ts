@@ -84,4 +84,34 @@ export const loginFetch = async (payload: LoginValues) => {
   return res;
 };
 
-export const forgotPasswordFetch = async () => {};
+export const forgotPasswordFetch = async (payload: { email: string }) => {
+  const res = await axiosInstance.post(
+    "/forgot-password",
+    {
+      email: payload.email,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  return res;
+};
+
+export const resetPasswordFetch = async (password: string, token: string) => {
+  const res = await axiosInstance.post(
+    "/reset-password",
+    {
+      password,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res
+};

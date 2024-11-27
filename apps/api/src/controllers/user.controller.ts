@@ -92,7 +92,7 @@ export class UserController {
     try {
       const { token } = await forgotPasswordService(req.body.email);
       return res.status(200).send({
-        msg: 'Password reset link has been sent to your email, please check your email',
+        msg: 'A reset link has been sent to your email. Please check your inbox or spam folder.',
         token,
       });
     } catch (error) {

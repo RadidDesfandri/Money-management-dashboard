@@ -13,3 +13,8 @@ export const initialValueFormUser = {
   password: "",
   confirmpassword: "",
 };
+
+export const initialValueResetPassword = {
+  password: "",
+  confirmpassword: "",
+};
