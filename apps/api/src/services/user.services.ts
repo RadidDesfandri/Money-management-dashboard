@@ -5,6 +5,9 @@ import path from 'path';
 import fs from 'fs';
 import { transporter } from '@/helpers/nodemailer';
 import { hashPassword } from '@/helpers/hashPassword';
+import { User } from '@prisma/client';
+import { compare } from 'bcrypt';
+import { createToken } from '@/helpers/createToken';
 
 export const registerService = async (email: string) => {
   try {
@@ -122,20 +125,16 @@ export const resendOtpService = async (email: string) => {
   }
 };
 
-export const userFormService = async (
-  email: string,
-  firstname: string,
-  lastname: string,
-  password: string,
-) => {
+export const userFormService = async (email: string, body: User) => {
   try {
+    const { password, firstname, lastname } = body;
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) throw new Error('User not found');
-    const hashPass = await hashPassword(password);
-
+    const hashPass = await hashPassword(password!);
+    
     const updateUser = await prisma.user.update({
       where: { email },
       data: {
@@ -146,6 +145,36 @@ export const userFormService = async (
     });
 
     return updateUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const loginService = async (body: User) => {
+  try {
+    const { email, password } = body;
+
+    const user = await prisma.user.findFirst({
+      where: { email },
+    });
+
+    if (!user) throw new Error('User not found');
+    if (!user.isVerified)
+      throw new Error('User not verify, please verify for login');
+
+    const isValidPass = await compare(password!, user.password!);
+
+    if (!isValidPass)
+      throw new Error('Incorrect password, please enter the correct password');
+
+    const payload = {
+      id: user.id,
+      email: user.email,
+    };
+
+    const token = createToken(payload, '2h');
+
+    return { user, token };
   } catch (error) {
     throw error;
   }

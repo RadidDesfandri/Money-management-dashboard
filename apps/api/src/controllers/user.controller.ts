@@ -1,4 +1,5 @@
 import {
+  loginService,
   registerService,
   resendOtpService,
   userFormService,
@@ -57,18 +58,26 @@ export class UserController {
     try {
       if (!req.user?.email) throw new Error('Something went wrong!');
 
-      const { firstname, lastname, password } = req.body;
-
       const userForm = await userFormService(
-        req.user?.email,
-        firstname,
-        lastname,
-        password,
+        req.user?.email, req.body
       );
 
       return res.status(200).send({
         msg: 'User data is complete, please log in to continue',
         userForm,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async loginController(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { user, token } = await loginService(req.body);
+      return res.status(200).send({
+        msg: 'Log in success',
+        user,
+        token,
       });
     } catch (error) {
       next(error);

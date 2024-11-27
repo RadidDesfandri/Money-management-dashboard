@@ -14,6 +14,7 @@ export class UserRouter {
 
   private initializeRoutes(): void {
     this.router.post('/register', this.userController.RegisterController);
+    this.router.post('/login', this.userController.loginController);
     this.router.post(
       '/verify-otp',
       checkTokenMiddleware,

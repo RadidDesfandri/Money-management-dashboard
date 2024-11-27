@@ -18,7 +18,7 @@ import {
   registerFetch,
 } from "@/libs/fetch/auth";
 import { AxiosError } from "axios";
-import { createCookie } from "@/libs/server";
+import { createCookie, navigate } from "@/libs/server";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "@/Redux/hooks";
 import { setIsModalOpenOtp } from "@/Redux/slices/modalSlice";
@@ -57,6 +57,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
         createCookie("token", res.data.token);
         toast.success(res.data.msg);
         action.resetForm();
+        navigate("/dashboard");
       } catch (error) {
         if (error instanceof AxiosError) {
           toast.error(error.response?.data);

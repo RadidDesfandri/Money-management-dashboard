@@ -14,7 +14,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-interface FormikHelper {
+interface FormikHelp {
   firstname: string;
   lastname: string;
   password: string;
@@ -30,7 +30,7 @@ const UserForm = () => {
 
   const onSubmit = async (
     data: UserType,
-    action: FormikHelpers<FormikHelper>,
+    action: FormikHelpers<FormikHelp>,
   ) => {
     setIsLoading(true);
     try {
