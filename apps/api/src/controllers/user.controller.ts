@@ -1,7 +1,9 @@
 import {
+  forgotPasswordService,
   loginService,
   registerService,
   resendOtpService,
+  resetPasswordService,
   userFormService,
   verivyOtpService,
 } from '@/services/user.services';
@@ -58,9 +60,7 @@ export class UserController {
     try {
       if (!req.user?.email) throw new Error('Something went wrong!');
 
-      const userForm = await userFormService(
-        req.user?.email, req.body
-      );
+      const userForm = await userFormService(req.user?.email, req.body);
 
       return res.status(200).send({
         msg: 'User data is complete, please log in to continue',
@@ -78,6 +78,39 @@ export class UserController {
         msg: 'Log in success',
         user,
         token,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async ForgotPasswordController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { token } = await forgotPasswordService(req.body.email);
+      return res.status(200).send({
+        msg: 'Password reset link has been sent to your email, please check your email',
+        token,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async ResetPasswordController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      if (!req.user?.email) throw new Error('Something went wrong!');
+
+      await resetPasswordService(req.user?.email, req.body.password);
+      return res.status(200).send({
+        msg: 'Password has been changed, please log in',
       });
     } catch (error) {
       next(error);
