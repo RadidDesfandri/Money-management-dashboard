@@ -20,8 +20,8 @@ import {
 import { AxiosError } from "axios";
 import { createCookie } from "@/libs/server";
 import toast from "react-hot-toast";
-import ModalOtp from "@/components/Modals/ModalOtp";
-import OtpForm from "./OtpForm";
+import { useAppDispatch } from "@/Redux/hooks";
+import { setIsModalOpenOtp } from "@/Redux/slices/modalSlice";
 
 interface ModalAuthProps {
   isOpen: boolean;
@@ -34,7 +34,8 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
   const [isVariant, setIsVariant] = useState<VariantAuth>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const [openOtp, setOpenOtp] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const handleChangeVariant = useCallback(() => {
     if (isVariant == "LOGIN") {
@@ -70,7 +71,8 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
         const res = await registerFetch(data);
         createCookie("otp", res.data.token);
         toast.success(res.data.msg);
-        setOpenOtp(true);
+        dispatch(setIsModalOpenOtp(true));
+        setIsVariant("LOGIN");
         action.resetForm();
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -216,7 +218,6 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
           );
         }}
       </Formik>
-      <OtpForm onClose={() => setOpenOtp(false)} isOpen={openOtp} />
     </Modal>
   );
 };

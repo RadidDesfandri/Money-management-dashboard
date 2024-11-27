@@ -1,4 +1,4 @@
-import { LoginValues, RegisterValues } from "@/types/formAuth";
+import { LoginValues, RegisterValues, UserType } from "@/types/formAuth";
 import { axiosInstance } from "../axios";
 import { getCookie } from "../server";
 
@@ -49,7 +49,24 @@ export const resendOtpFetch = async () => {
   return res;
 };
 
-export const updateDataFetch = async () => {};
+export const userFormFetch = async (payload: UserType) => {
+  const token = await getCookie("otp");
+  const res = await axiosInstance.patch(
+    "/user-form",
+    {
+      firstname: payload.firstname,
+      lastname: payload.lastname,
+      password: payload.lastname,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token?.value}`,
+      },
+    },
+  );
+
+  return res;
+};
 
 export const loginFetch = async (payload: LoginValues) => {
   const res = await axiosInstance.post(

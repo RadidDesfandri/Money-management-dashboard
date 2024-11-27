@@ -1,23 +1,27 @@
 "use client";
 
 import Button from "@/components/Button";
-import ModalOtp from "@/components/Modals/ModalOtp";
+import ModalClose from "@/components/Modals/ModalnClose";
 import { resendOtpFetch, verifyOtpFetch } from "@/libs/fetch/auth";
 import { createCookie } from "@/libs/server";
+import { useAppDispatch, useAppSelector } from "@/Redux/hooks";
+import {
+  setIsLoadingSlice,
+  setIsModalOpenOtp,
+  setIsModalOpenUser,
+} from "@/Redux/slices/modalSlice";
 import { AxiosError } from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-interface OtpFormProps {
-  isOpen?: boolean;
-  onClose: () => void;
-}
-
-const OtpForm: React.FC<OtpFormProps> = ({ isOpen, onClose }) => {
+const OtpForm = () => {
   const [otp, setOtp] = useState<string[]>(new Array(5).fill(""));
   const [isLoading, setIsLoading] = useState(false);
   const [time, setTime] = useState(120);
+
+  const { isOpenOtp } = useAppSelector((state) => state.modal);
+  const dispatch = useAppDispatch();
 
   const minutes = Math.floor(time / 60);
   const second = time % 60;
@@ -58,19 +62,28 @@ const OtpForm: React.FC<OtpFormProps> = ({ isOpen, onClose }) => {
 
   const onSubmit = async () => {
     setIsLoading(true);
+    dispatch(setIsLoadingSlice(true));
     try {
       const otpValue = otp.join("");
       if (isOtpComplete) {
         const res = await verifyOtpFetch({ otp: otpValue });
         toast.success(res.data.msg);
         setOtp(new Array(5).fill(""));
+        dispatch(setIsModalOpenOtp(false));
+
+        setTimeout(() => {
+          dispatch(setIsLoadingSlice(false));
+          dispatch(setIsModalOpenUser(true));
+        }, 5000);
       } else {
         toast.error("Please enter your otp code");
+        dispatch(setIsLoadingSlice(false));
       }
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data);
       }
+      dispatch(setIsLoadingSlice(false));
     } finally {
       setIsLoading(false);
     }
@@ -91,10 +104,10 @@ const OtpForm: React.FC<OtpFormProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <ModalOtp isOpen={isOpen}>
+    <ModalClose isOpen={isOpenOtp}>
       <div className="flex flex-col items-center px-3 py-3 text-white">
         <Image src={"/otp.svg"} alt="Otp-character" width={180} height={180} />
-        <h1 className="mb-1 mt-5 text-4xl font-semibold text-secondary">OTP</h1>
+        <h1 className="mb-1 mt-4 text-4xl font-semibold text-secondary">OTP</h1>
         <h1 className="text-center text-xs text-gray-200">
           Kode OTP sudah dikirim ke Email kamu, mohon check email kamu untuk
           mendapatkan kode OTP,{" "}
@@ -120,7 +133,7 @@ const OtpForm: React.FC<OtpFormProps> = ({ isOpen, onClose }) => {
           })}
         </div>
 
-        <div className="mb-6 flex flex-col items-center">
+        <div className="mb-4 flex flex-col items-center">
           <p className="text-xs text-gray-200 md:text-sm">
             Belum mendapatkan code otp?
           </p>
@@ -139,10 +152,10 @@ const OtpForm: React.FC<OtpFormProps> = ({ isOpen, onClose }) => {
           onClick={onSubmit}
           disabled={isLoading}
         >
-          Verifikasi
+          {isLoading ? "Loading" : "Verifikasi"}
         </Button>
       </div>
-    </ModalOtp>
+    </ModalClose>
   );
 };
 

@@ -6,3 +6,10 @@ export interface LoginValues {
 export interface RegisterValues {
   email: string;
 }
+
+export interface UserType {
+  email?: string;
+  firstname: string;
+  lastname: string;
+  password: string;
+}

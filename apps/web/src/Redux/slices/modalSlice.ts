@@ -1,11 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ModalSlice {
+  isOpen: boolean;
   isOpenOtp: boolean;
+  isOpenFormUser: boolean;
+  isLoadingSlice: boolean;
 }
 
 const initialState: ModalSlice = {
   isOpenOtp: false,
+  isOpenFormUser: false,
+  isOpen: false,
+  isLoadingSlice: false,
 };
 
 export const modalSlice = createSlice({
@@ -16,11 +22,24 @@ export const modalSlice = createSlice({
       state.isOpenOtp = action.payload;
     },
 
-    toggleModalOtp: (state) => {
-      state.isOpenOtp = !state.isOpenOtp;
+    setIsModalOpenUser: (state, action: PayloadAction<boolean>) => {
+      state.isOpenFormUser = action.payload;
+    },
+
+    setIsLoadingSlice: (state, action: PayloadAction<boolean>) => {
+      state.isLoadingSlice = action.payload;
+    },
+
+    toggleModal: (state) => {
+      state.isOpen = !state.isOpen;
     },
   },
 });
 
-export const { setIsModalOpenOtp, toggleModalOtp } = modalSlice.actions;
+export const {
+  setIsModalOpenOtp,
+  toggleModal,
+  setIsLoadingSlice,
+  setIsModalOpenUser,
+} = modalSlice.actions;
 export default modalSlice.reducer;
