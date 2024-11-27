@@ -16,6 +16,15 @@ export class UserRouter {
     this.router.post('/register', this.userController.RegisterController);
     this.router.post('/login', this.userController.loginController);
     this.router.post(
+      '/forgot-password',
+      this.userController.ForgotPasswordController,
+    );
+    this.router.post(
+      '/reset-password',
+      checkTokenMiddleware,
+      this.userController.ResetPasswordController,
+    );
+    this.router.post(
       '/verify-otp',
       checkTokenMiddleware,
       this.userController.VerifyOtpController,

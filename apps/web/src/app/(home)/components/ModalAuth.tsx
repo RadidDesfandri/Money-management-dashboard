@@ -55,9 +55,9 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
       try {
         const res = await loginFetch(data);
         createCookie("token", res.data.token);
+        navigate("/dashboard");
         toast.success(res.data.msg);
         action.resetForm();
-        navigate("/dashboard");
       } catch (error) {
         if (error instanceof AxiosError) {
           toast.error(error.response?.data);
@@ -86,13 +86,13 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
 
     if (isVariant == "FORGOTPASSWORD") {
       try {
-        const res = await forgotPasswordFetch();
+        const res = await forgotPasswordFetch(data);
+        toast.success(res.data.msg);
         action.resetForm();
       } catch (error) {
         if (error instanceof AxiosError) {
           toast.error(error.response?.data);
         }
-        console.log(error);
       } finally {
         setIsLoading(false);
       }

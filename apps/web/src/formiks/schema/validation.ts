@@ -23,3 +23,14 @@ export const userFormSchema = yup.object().shape({
       "password and confirm password must be the same. please check again.",
     ),
 });
+
+export const resetPasswordSchema = yup.object().shape({
+  password: yup.string().required().min(7),
+  confirmpassword: yup
+    .string()
+    .required()
+    .oneOf(
+      [yup.ref("password")],
+      "password and confirm password must be the same. please check again.",
+    ),
+});
