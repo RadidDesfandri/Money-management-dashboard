@@ -56,7 +56,7 @@ export const userFormFetch = async (payload: UserType) => {
     {
       firstname: payload.firstname,
       lastname: payload.lastname,
-      password: payload.lastname,
+      password: payload.password,
     },
     {
       headers: {
