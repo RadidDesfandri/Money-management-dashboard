@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import modalReducer from "@/Redux/slices/modalSlice";
+import userReducer from "@/Redux/slices/userSlice";
 
 const createNoopStorage = () => {
   return {
@@ -31,6 +32,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   modal: modalReducer,
+  user: userReducer,
 });
 
 const makeConfiguredStore = () =>

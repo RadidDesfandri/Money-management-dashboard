@@ -3,6 +3,8 @@
 import Button from "@/components/Button";
 import Modal from "@/components/Modals/Modal";
 import { deleteCookie, navigate } from "@/libs/server";
+import { useAppDispatch } from "@/Redux/hooks";
+import { logoutUser } from "@/Redux/slices/userSlice";
 import { useCallback } from "react";
 
 interface ModalLogoutProps {
@@ -11,10 +13,13 @@ interface ModalLogoutProps {
 }
 
 const ModalLogout: React.FC<ModalLogoutProps> = ({ isOpen, onClose }) => {
+  const dispatch = useAppDispatch();
+
   const handleLogOut = useCallback(() => {
     deleteCookie("token");
     navigate("/");
     localStorage.clear();
+    dispatch(logoutUser());
   }, []);
 
   return (
@@ -27,7 +32,7 @@ const ModalLogout: React.FC<ModalLogoutProps> = ({ isOpen, onClose }) => {
           Kamu akan keluar dari akun kamu. Pastikan untuk menyimpan pekerjaan
           kamu sebelum melanjutkan. Apakah kamu ingin melanjutkan?
         </p>
-        <div className="mt-10 flex justify-end border-t gap-x-2 border-neutral-700 pt-6">
+        <div className="mt-10 flex justify-end gap-x-2 border-t border-neutral-700 pt-6">
           <Button type="button" onClick={onClose}>
             <p className="text-white">Batal</p>
           </Button>
