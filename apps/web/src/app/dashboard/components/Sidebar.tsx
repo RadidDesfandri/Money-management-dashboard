@@ -6,9 +6,13 @@ import ModalLogout from "./ModalLogout";
 import Avatar from "@/components/Avatar";
 import { useRoutes } from "@/hooks/useRoutes";
 import { useEffect, useRef, useState } from "react";
+import { useAppSelector } from "@/Redux/hooks";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const { routes, isModalLogOutOpen, handleModalClose } = useRoutes();
+  const { firstname, lastname, avatar, createdAt } = useAppSelector(
+    (state) => state.user,
+  );
 
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -112,10 +116,12 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <p>ppp</p>
             <div className="flex items-center gap-x-3">
               <div>
-                <p className="font-semibold">Windoq Saputra</p>
-                <p className="text-end text-xs text-neutral-400">20 Nov 2024</p>
+                <p className="font-semibold">
+                  {firstname} {lastname}
+                </p>
+                <p className="text-end text-xs text-neutral-400">{createdAt}</p>
               </div>
-              <Avatar isScroll={isScrolled} />
+              <Avatar isScroll={isScrolled} avatar={avatar} />
             </div>
           </div>
         </div>

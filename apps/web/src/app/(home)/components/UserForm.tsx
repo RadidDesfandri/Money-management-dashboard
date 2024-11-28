@@ -6,6 +6,7 @@ import ModalClose from "@/components/Modals/ModalnClose";
 import { initialValueFormUser } from "@/formiks/Initialvalue/initial";
 import { userFormSchema } from "@/formiks/schema/validation";
 import { userFormFetch } from "@/libs/fetch/auth";
+import { deleteCookie } from "@/libs/server";
 import { useAppDispatch, useAppSelector } from "@/Redux/hooks";
 import { setIsModalOpenUser } from "@/Redux/slices/modalSlice";
 import { UserType } from "@/types/formAuth";
@@ -37,6 +38,7 @@ const UserForm = () => {
       const res = await userFormFetch(data);
       toast.success(res.data.msg);
       action.resetForm();
+      deleteCookie("otp");
       dispatch(setIsModalOpenUser(false));
     } catch (error) {
       if (error instanceof AxiosError) {

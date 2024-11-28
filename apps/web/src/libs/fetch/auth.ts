@@ -112,6 +112,8 @@ export const resetPasswordFetch = async (password: string, token: string) => {
       },
     },
   );
+  console.log(res, 'response client backend');
+  
 
   return res
 };

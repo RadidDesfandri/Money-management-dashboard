@@ -156,7 +156,7 @@ export const loginService = async (body: User) => {
       email: user.email,
     };
 
-    const token = createToken(payload, '2d');
+    const token = createToken(payload, '1h');
 
     return { user, token };
   } catch (error) {
@@ -169,7 +169,6 @@ export const forgotPasswordService = async (email: string) => {
     const user = await notFoundUser(email);
 
     const payload = {
-      id: user.id,
       email: user.email,
     };
 
