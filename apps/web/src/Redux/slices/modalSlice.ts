@@ -30,6 +30,10 @@ export const modalSlice = createSlice({
       state.isLoadingSlice = action.payload;
     },
 
+    setIsOpen: (state, action: PayloadAction<boolean>) => {
+      state.isOpen = action.payload;
+    },
+
     toggleModal: (state) => {
       state.isOpen = !state.isOpen;
     },
@@ -41,5 +45,6 @@ export const {
   toggleModal,
   setIsLoadingSlice,
   setIsModalOpenUser,
+  setIsOpen,
 } = modalSlice.actions;
 export default modalSlice.reducer;

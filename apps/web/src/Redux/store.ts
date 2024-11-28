@@ -24,7 +24,7 @@ const storage =
     : createNoopStorage();
 
 const persistConfig = {
-  key: "manage-your-money-brooo",
+  key: "manage-your-money",
   storage,
   timeout: 2000,
 };
