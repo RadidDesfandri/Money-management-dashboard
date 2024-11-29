@@ -116,7 +116,7 @@ export const resendOtpService = async (email: string) => {
 
 export const userFormService = async (email: string, body: User) => {
   try {
-    const { password, firstname, lastname } = body;
+    const { password, username } = body;
 
     await notFoundUser(email);
 
@@ -125,8 +125,7 @@ export const userFormService = async (email: string, body: User) => {
     const updateUser = await prisma.user.update({
       where: { email },
       data: {
-        firstname,
-        lastname,
+        username,
         password: hashPass,
       },
     });
@@ -168,17 +167,32 @@ export const forgotPasswordService = async (email: string) => {
   try {
     const user = await notFoundUser(email);
 
+    const now = new Date();
+    if (
+      user.resetPassReq &&
+      now.getTime() - user.resetPassReq.getTime() < 24 * 60 * 60 * 1000
+    ) {
+      throw new Error('Password reset can only be done once every 24 hours.');
+    }
+
+    await prisma.user.update({
+      where: { email },
+      data: {
+        resetPassReq: now,
+      },
+    });
+
     const payload = {
       email: user.email,
     };
 
-    const token = createToken(payload, '1h');
+    const token = createToken(payload, '1d');
     const link = process.env.BASE_URL_FE + `/forgot-password/${token}`;
     const templatePath = path.join(__dirname, '../templates', 'resetpass.hbs');
 
     const dataSendMail = {
       link,
-      username: user.firstname || user.email,
+      username: user.username || user.email,
     };
 
     const templateSource = fs.readFileSync(templatePath, 'utf-8');
@@ -206,6 +220,7 @@ export const resetPasswordService = async (email: string, password: string) => {
       where: { email },
       data: {
         password: hashPass,
+        resetPassReq: new Date(),
       },
     });
 

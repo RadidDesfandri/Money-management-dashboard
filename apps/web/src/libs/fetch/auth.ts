@@ -54,8 +54,7 @@ export const userFormFetch = async (payload: UserType) => {
   const res = await axiosInstance.patch(
     "/user-form",
     {
-      firstname: payload.firstname,
-      lastname: payload.lastname,
+      username: payload.username,
       password: payload.password,
     },
     {

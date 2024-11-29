@@ -5,14 +5,16 @@ import SidebarItem from "./SidebarItem";
 import ModalLogout from "./ModalLogout";
 import Avatar from "@/components/Avatar";
 import { useRoutes } from "@/hooks/useRoutes";
-import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "@/Redux/hooks";
+import { useEffect, useRef, useState } from "react";
+import {
+  formatDateToIndonesia,
+  formatTimeToUserLocale,
+} from "@/libs/formatDate";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const { routes, isModalLogOutOpen, handleModalClose } = useRoutes();
-  const { firstname, lastname, avatar, createdAt } = useAppSelector(
-    (state) => state.user,
-  );
+  const { username, avatar, createdAt } = useAppSelector((state) => state.user);
 
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -98,28 +100,37 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       {/* Header */}
-      <div className="w-full overflow-y-scroll md:overflow-hidden">
+      <div className="scrollbar-none w-full overflow-y-scroll md:overflow-hidden">
         <div
           className={clsx(
             "flex w-full items-center transition-all duration-300",
             isScrolled
-              ? "rounded-b-2xl bg-neutral-800 text-slate-50"
+              ? "bg-abu text-slate-50"
               : "bg-transparent text-slate-50",
           )}
         >
           <div
             className={clsx(
-              "flex w-full items-center justify-between px-5 py-3",
-              isScrolled ? "border-0" : "border-b border-neutral-600",
+              "flex w-full items-center justify-between border-b border-neutral-600 px-5 py-3",
             )}
           >
-            <p>ppp</p>
+            <div>
+              <h1 className="font-medium">Income Rp14.000.000</h1>
+              <p className="text-xs text-neutral-400">
+                Bergabung pada {formatDateToIndonesia(createdAt)}
+              </p>
+            </div>
+
+            <div>
+              <p>tes</p>
+            </div>
+
             <div className="flex items-center gap-x-3">
               <div>
-                <p className="font-semibold">
-                  {firstname} {lastname}
+                <p className="text-end font-semibold">{username}</p>
+                <p className="text-end text-xs text-neutral-400">
+                  Waktu sekarang {formatTimeToUserLocale(new Date())}
                 </p>
-                <p className="text-end text-xs text-neutral-400">{createdAt}</p>
               </div>
               <Avatar isScroll={isScrolled} avatar={avatar} />
             </div>

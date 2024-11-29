@@ -16,8 +16,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 interface FormikHelp {
-  firstname: string;
-  lastname: string;
+  username: string;
   password: string;
   confirmpassword: string;
 }
@@ -70,22 +69,13 @@ const UserForm = () => {
                 </p>
                 <div className="my-3 space-y-2">
                   <Input
-                    name="firstname"
+                    name="username"
                     type="text"
-                    error={!!errors.firstname && touched.firstname}
+                    error={!!errors.username && touched.username}
                     disabled={isLoading}
-                    label="Nama depan"
+                    label="Nama pengguna"
                     autoComplete="off"
-                    placeholder="Masukkan nama depan"
-                  />
-                  <Input
-                    name="lastname"
-                    type="text"
-                    disabled={isLoading}
-                    error={!!errors.lastname && touched.lastname}
-                    label="Nama belakang"
-                    autoComplete="off"
-                    placeholder="Masukkan nama belakang"
+                    placeholder="Masukkan nama pengguna"
                   />
                   <Input
                     name="password"

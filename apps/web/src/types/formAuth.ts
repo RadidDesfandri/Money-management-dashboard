@@ -9,7 +9,6 @@ export interface RegisterValues {
 
 export interface UserType {
   email?: string;
-  firstname: string;
-  lastname: string;
+  username: string;
   password: string;
 }
