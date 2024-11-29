@@ -22,6 +22,7 @@ import { createCookie, navigate } from "@/libs/server";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "@/Redux/hooks";
 import { setIsModalOpenOtp } from "@/Redux/slices/modalSlice";
+import { loginUser } from "@/Redux/slices/userSlice";
 
 interface ModalAuthProps {
   isOpen: boolean;
@@ -55,6 +56,7 @@ const ModalAuth: React.FC<ModalAuthProps> = ({ isOpen, onClose }) => {
       try {
         const res = await loginFetch(data);
         createCookie("token", res.data.token);
+        dispatch(loginUser(res.data.user));
         navigate("/dashboard");
         toast.success(res.data.msg);
         action.resetForm();

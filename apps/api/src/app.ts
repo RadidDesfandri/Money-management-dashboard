@@ -9,6 +9,7 @@ import express, {
 import cors from 'cors';
 import { PORT } from './config';
 import { UserRouter } from './routers/user.router';
+import { DecodeRouter } from './routers/decode.router';
 
 export default class App {
   private app: Express;
@@ -51,12 +52,14 @@ export default class App {
 
   private routes(): void {
     const userRouter = new UserRouter();
+    const decodeRouter = new DecodeRouter();
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`Hello, Enjoy The Coding!!!`);
     });
 
     this.app.use('/api', userRouter.getRouter());
+    this.app.use('/api', decodeRouter.getRouter());
   }
 
   public start(): void {

@@ -8,8 +8,7 @@ export const initialValueLogin = {
 };
 
 export const initialValueFormUser = {
-  firstname: "",
-  lastname: "",
+  username: "",
   password: "",
   confirmpassword: "",
 };

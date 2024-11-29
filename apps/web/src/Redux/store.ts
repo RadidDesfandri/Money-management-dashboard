@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import modalReducer from "@/Redux/slices/modalSlice";
+import userReducer from "@/Redux/slices/userSlice";
 
 const createNoopStorage = () => {
   return {
@@ -24,13 +25,14 @@ const storage =
     : createNoopStorage();
 
 const persistConfig = {
-  key: "manage-your-money-brooo",
+  key: "manage-your-money",
   storage,
   timeout: 2000,
 };
 
 const rootReducer = combineReducers({
   modal: modalReducer,
+  user: userReducer,
 });
 
 const makeConfiguredStore = () =>

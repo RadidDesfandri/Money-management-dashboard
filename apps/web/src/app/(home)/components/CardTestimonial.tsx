@@ -35,8 +35,8 @@ const CardTestimonial: React.FC<TestimonialProps> = ({
         <div>
           <h3 className="font-medium">{name}</h3>
           <div className="flex">
-            {ratingIcon.map((rating) => (
-              <rating.icon size={15} className="text-yellow-400" />
+            {ratingIcon.map((rating, idx) => (
+              <rating.icon key={`Rating-${idx}`} size={15} className="text-yellow-400" />
             ))}
           </div>
         </div>

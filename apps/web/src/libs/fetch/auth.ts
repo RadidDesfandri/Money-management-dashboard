@@ -54,8 +54,7 @@ export const userFormFetch = async (payload: UserType) => {
   const res = await axiosInstance.patch(
     "/user-form",
     {
-      firstname: payload.firstname,
-      lastname: payload.lastname,
+      username: payload.username,
       password: payload.password,
     },
     {
@@ -112,6 +111,8 @@ export const resetPasswordFetch = async (password: string, token: string) => {
       },
     },
   );
+  console.log(res, 'response client backend');
+  
 
   return res
 };

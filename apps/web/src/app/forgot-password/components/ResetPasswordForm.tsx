@@ -38,7 +38,11 @@ const ResetPasswordForm: React.FC<ResetPasswordProps> = ({ token }) => {
       action.resetForm();
     } catch (error) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data);
+        if (error.response?.data.status === "ERROR MIDDLEWARE") {
+          toast.error("Something went wrong!");
+        } else {
+          toast.error(error.response?.data);
+        }
       }
     } finally {
       setIsLoading(false);

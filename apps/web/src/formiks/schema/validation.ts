@@ -12,8 +12,7 @@ export const loginSchema = yup.object().shape({
 });
 
 export const userFormSchema = yup.object().shape({
-  firstname: yup.string().required(),
-  lastname: yup.string().required(),
+  username: yup.string().required(),
   password: yup.string().required().min(7),
   confirmpassword: yup
     .string()
