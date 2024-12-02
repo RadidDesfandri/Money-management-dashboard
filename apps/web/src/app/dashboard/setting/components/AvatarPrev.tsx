@@ -3,14 +3,13 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { useAppSelector } from "@/Redux/hooks";
-import CustomIconVerified from "./CustomIconVerified";
+import CustomIconVerified from "@/components/CustomIconVerified";
 
-interface AvatarProps {
+interface AvatarPrevProps {
   image?: string | null;
-  isScroll?: boolean;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ image, isScroll }) => {
+const AvatarPrev: React.FC<AvatarPrevProps> = ({ image }) => {
   const { email, username, firstname, lastname, phone, avatar } =
     useAppSelector((state) => state.user);
 
@@ -18,19 +17,18 @@ const Avatar: React.FC<AvatarProps> = ({ image, isScroll }) => {
     <div className="relative">
       <div
         className={clsx(
-          "relative inline-block h-9 w-9 overflow-hidden rounded-full transition-all duration-300",
-          isScroll ? "ring-2 ring-secondary" : "ring-1 ring-secondaryhover",
+          "relative inline-block h-72 w-72 overflow-hidden rounded-full ring-4 ring-secondaryhover transition-all duration-300",
         )}
       >
         <Image alt="Avatar" src={image || "/profileplaceholder.png"} fill />
       </div>
       {email && username && firstname && lastname && phone && avatar && (
-        <div className="absolute -right-1 top-0">
-          <CustomIconVerified small size={15} />
+        <div className="absolute right-4 top-4">
+          <CustomIconVerified large size={40} />
         </div>
       )}
     </div>
   );
 };
 
-export default Avatar;
+export default AvatarPrev;

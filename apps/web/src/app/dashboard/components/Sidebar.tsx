@@ -132,7 +132,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                   Waktu sekarang {formatTimeToUserLocale(new Date())}
                 </p>
               </div>
-              <Avatar isScroll={isScrolled} avatar={avatar} />
+              <Avatar isScroll={isScrolled} image={avatar} />
             </div>
           </div>
         </div>
@@ -140,7 +140,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         {/* Content */}
         <div
           ref={scrollContainerRef}
-          className="scrollbar-none h-full w-full overflow-auto px-6 pt-4"
+          className="scrollbar-none h-full w-full overflow-auto px-6 pt-10"
         >
           {children}
         </div>
